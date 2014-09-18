@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="zebba_annotation.file_upload.listener.class">Zebba\Bundle\AnnotationBundle\Event\Listener\FileUploadListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="zebba_annotation.file_upload.listener"
+            class="%zebba_annotation.file_upload.listener.class%">
+            <argument type="service" id="zebba_annotation.service.annotation_reader" />
+            <argument type="service" id="zebba_annotation.file_upload.handler" />
+            <argument type="service" id="zebba_annotation.service.logger" />
+            
+            <tag name="doctrine.event_listener" event="prePersist" />
+            <tag name="doctrine.event_listener" event="postPersist" />
+            <tag name="doctrine.event_listener" event="preUpdate" />
+            <tag name="doctrine.event_listener" event="postUpdate" />
+            <tag name="doctrine.event_listener" event="postRemove" />
+        </service>
+    </services>
+</container>

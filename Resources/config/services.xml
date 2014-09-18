@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="zebba_annotation.file_upload.handler.class">Zebba\Bundle\AnnotationBundle\Annotation\Handler\FileUploadHandler</parameter>
+    </parameters>
+
+    <services>
+        <service id="zebba_annotation.service.annotation_reader" alias="annotation_reader" public="false" />
+        
+        <service id="zebba_annotation.service.logger" alias="logger.null_logger" public="false" />
+   
+        <service id="logger.null_logger" public="false"
+            class="Psr\Log\NullLogger" />
+            
+        <service id="zebba_annotation.file_upload.handler" public="false"
+            class="%zebba_annotation.file_upload.handler.class%">
+            <argument>%kernel.root_dir%/../web</argument>
+            <argument type="service" id="zebba_annotation.service.logger" />
+        </service>
+        
+        <service id="zebba_annotation.function.file_upload"
+            class="Zebba\Bundle\AnnotationBundle\Bridge\Twig\Functions\FileUploadFunction">
+            <argument type="service" id="zebba_annotation.service.annotation_reader" />
+            
+            <tag name="twig.extension" />
+        </service>
+    </services>
+</container>
