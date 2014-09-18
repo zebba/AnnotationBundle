@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
 use Psr\Log\LoggerInterface;
 use Zebba\Bundle\AnnotationBundle\Annotation\Handler\FileUploadHandler;
+use Doctrine\Common\Proxy\Proxy;
 
 class FileUploadListener
 {
@@ -109,6 +110,10 @@ class FileUploadListener
 
 		$reflectionClass = new \ReflectionClass($entity);
 
-		return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
+		if ($entity instanceof Proxy) {
+			return $this->reader->getClassAnnotation($reflectionClass->getParentClass(), self::ANNOTATION);
+		} else {
+			return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
+		}
 	}
 }

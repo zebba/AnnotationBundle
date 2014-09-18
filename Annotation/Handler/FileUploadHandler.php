@@ -73,6 +73,9 @@ final class FileUploadHandler
 		$directory = $this->uploadRootDir . $annotation->getUploadSubDirectory();
 		$filename = $entity->{ $annotation->getFilepath() }();
 
+		$this->logger->debug('directory: '. $directory);
+		$this->logger->debug('filename: '. $filename);
+
 		$file->move($directory, $filename);
 
 		$temp_path = $entity->{ $annotation->getTempFilepath() }();

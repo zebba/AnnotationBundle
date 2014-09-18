@@ -4,6 +4,7 @@ namespace Zebba\Bundle\AnnotationBundle\Bridge\Twig\Functions;
 
 use Doctrine\Common\Annotations\Reader;
 use Zebba\Bundle\AnnotationBundle\Annotation\FileUpload;
+use Doctrine\Common\Proxy\Proxy;
 
 class FileUploadFunction extends \Twig_Extension
 {
@@ -67,6 +68,10 @@ class FileUploadFunction extends \Twig_Extension
 	{
 		$reflectionClass = new \ReflectionClass($entity);
 
-		return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
+		if ($entity instanceof Proxy) {
+			return $this->reader->getClassAnnotation($reflectionClass->getParentClass(), self::ANNOTATION);
+		} else {
+			return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
+		}
 	}
 }
