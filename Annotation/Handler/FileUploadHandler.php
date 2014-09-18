@@ -81,7 +81,9 @@ final class FileUploadHandler
 		$temp_path = $entity->{ $annotation->getTempFilepath() }();
 
 		if ($temp_path && 'initial' !== $temp_path) {
-			unlink($directory .'/'. $temp_path);
+			if (is_writable($directory .'/'. $temp_path)) {
+				unlink($directory .'/'. $temp_path);
+			}
 
 			$entity->{ $annotation->setTempFilepath() }(null);
 		}

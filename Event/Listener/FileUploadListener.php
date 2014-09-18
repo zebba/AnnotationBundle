@@ -108,12 +108,8 @@ class FileUploadListener
 	{
 		$entity = $args->getEntity();
 
-		$reflectionClass = new \ReflectionClass($entity);
+		$reflectionClass = $args->getObjectManager()->getClassMetadata(get_class($entity))->getReflectionClass();
 
-		if ($entity instanceof Proxy) {
-			return $this->reader->getClassAnnotation($reflectionClass->getParentClass(), self::ANNOTATION);
-		} else {
-			return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
-		}
+		return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
 	}
 }

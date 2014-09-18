@@ -10,7 +10,7 @@
 
     <services>
         <service id="zebba_annotation.service.annotation_reader" alias="annotation_reader" public="false" />
-        
+        <service id="zebba_annotation.service.object_manager" alias="doctrine.orm.default_entity_manager" public="false" />
         <service id="zebba_annotation.service.logger" alias="logger.null_logger" public="false" />
    
         <service id="logger.null_logger" public="false"
@@ -25,6 +25,7 @@
         <service id="zebba_annotation.function.file_upload"
             class="Zebba\Bundle\AnnotationBundle\Bridge\Twig\Functions\FileUploadFunction">
             <argument type="service" id="zebba_annotation.service.annotation_reader" />
+            <argument type="service" id="zebba_annotation.service.object_manager" />
             
             <tag name="twig.extension" />
         </service>

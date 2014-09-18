@@ -5,11 +5,14 @@ namespace Zebba\Bundle\AnnotationBundle\Bridge\Twig\Functions;
 use Doctrine\Common\Annotations\Reader;
 use Zebba\Bundle\AnnotationBundle\Annotation\FileUpload;
 use Doctrine\Common\Proxy\Proxy;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class FileUploadFunction extends \Twig_Extension
 {
 	/** @var Reader */
 	private $reader;
+	/** @var ObjectManager */
+	private $om;
 
 	const ANNOTATION = 'Zebba\Bundle\AnnotationBundle\Annotation\FileUpload';
 
@@ -18,10 +21,12 @@ class FileUploadFunction extends \Twig_Extension
 	 *
 	 * @param string $upload_root_dir
 	 * @param Reader $reader
+	 * @param ObjectManager $om
 	 */
-	public function __construct(Reader $reader)
+	public function __construct(Reader $reader, ObjectManager $om)
 	{
 		$this->reader = $reader;
+		$this->om = $om;
 	}
 
 	/**
@@ -68,10 +73,8 @@ class FileUploadFunction extends \Twig_Extension
 	{
 		$reflectionClass = new \ReflectionClass($entity);
 
-		if ($entity instanceof Proxy) {
-			return $this->reader->getClassAnnotation($reflectionClass->getParentClass(), self::ANNOTATION);
-		} else {
-			return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
-		}
+		$reflectionClass = $this->om->getClassMetadata(get_class($entity))->getReflectionClass();
+
+		return $this->reader->getClassAnnotation($reflectionClass, self::ANNOTATION);
 	}
 }
